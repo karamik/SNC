@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: star_db
+    environment:
+      POSTGRES_USER: star_user
+      POSTGRES_PASSWORD: star_password
+      POSTGRES_DB: star_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - star_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: star_redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - star_network
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: star_bot
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    networks:
+      - star_network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: star_api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    networks:
+      - star_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  star_network:
+    driver: bridge
