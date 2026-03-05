@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Устанавливаем системные зависимости (если нужны)
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Копируем requirements и устанавливаем зависимости Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем код бота
+COPY bot/ /app/bot/
+COPY .env /app/.env
+
+# Запускаем бота
+CMD ["python", "-m", "bot.main"]
