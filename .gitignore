@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Project specific
+.env
+.env.local
+.env.*.local
+*.db
+*.sqlite3
+*.log
+
+# Docker
+docker-compose.override.yml
+
+# Static files (if any)
+api/static/assets/*
+!api/static/assets/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
